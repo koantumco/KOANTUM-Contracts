@@ -1,0 +1,14 @@
+# Foundry generated files
+cache/
+out/
+broadcast/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
