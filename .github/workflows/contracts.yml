@@ -9,12 +9,13 @@ permissions:
 
 jobs:
   deterministic-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5.1.0
         with:
           submodules: recursive
+          persist-credentials: false
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
@@ -34,12 +35,13 @@ jobs:
         run: forge test --no-match-path test/KOANT.BaseFork.t.sol
 
   base-fork-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5.1.0
         with:
           submodules: recursive
+          persist-credentials: false
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
