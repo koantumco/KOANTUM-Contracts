@@ -31,15 +31,8 @@ contract KOANTTeamVaultIntegrationTest is Test {
         weth = new MockERC20("Wrapped Ether", "WETH");
         router = new MockV2Router(factory, address(weth));
 
-        token = new KOANT(
-            operations,
-            founder1,
-            founder2,
-            genesisSafe,
-            address(vault),
-            address(router),
-            40_469_000 ether
-        );
+        token =
+            new KOANT(operations, founder1, founder2, genesisSafe, address(vault), address(router), 40_469_000 ether);
 
         assertEq(token.balanceOf(address(vault)), token.TEAM_VAULT_ALLOCATION());
         assertEq(token.balanceOf(treasuryBeneficiary), 0);
@@ -64,11 +57,7 @@ contract KOANTTeamVaultIntegrationTest is Test {
         vm.startPrank(founder1);
 
         vm.expectRevert(
-            abi.encodeWithSelector(
-                KOANT.MaxWalletExceeded.selector,
-                beneficiaryBalance + 1,
-                token.MAX_WALLET()
-            )
+            abi.encodeWithSelector(KOANT.MaxWalletExceeded.selector, beneficiaryBalance + 1, token.MAX_WALLET())
         );
 
         token.transfer(treasuryBeneficiary, 1);
@@ -87,11 +76,7 @@ contract KOANTTeamVaultIntegrationTest is Test {
         vm.startPrank(founder1);
 
         vm.expectRevert(
-            abi.encodeWithSelector(
-                KOANT.MaxWalletExceeded.selector,
-                token.MAX_WALLET() + 1,
-                token.MAX_WALLET()
-            )
+            abi.encodeWithSelector(KOANT.MaxWalletExceeded.selector, token.MAX_WALLET() + 1, token.MAX_WALLET())
         );
 
         token.transfer(ordinaryRecipient, 1);
