@@ -203,6 +203,7 @@ contract KOANT is ERC20 {
         bool isSell = pairInitialized && to == pair && from != address(this);
         bool systemRecipient = _isSystem(to);
         bool systemSender = _isSystem(from);
+        bool teamVaultRelease = from == teamVault;
         bool realBuy = isBuy && !systemRecipient && _isCountedV2Buy();
         bool publicSell = isSell && !systemSender;
 
@@ -231,7 +232,13 @@ contract KOANT is ERC20 {
         uint256 netAmount = amount - feeAmount;
 
         // Max wallet applies to ordinary recipients. Pair/system destinations are exempt by role.
-        if (!systemRecipient) {
+        //
+        // The immutable TeamVault is a deliberate one-time allocation source whose
+        // 3.9% balance is larger than MAX_WALLET. Its release to the fixed vault
+        // beneficiary must therefore bypass only this recipient-balance check.
+        // This does not make the beneficiary a system address: all other inbound
+        // transfers and buys remain subject to the normal max-wallet rules.
+        if (!systemRecipient && !teamVaultRelease) {
             uint256 resultingBalance = balanceOf(to) + netAmount;
             if (resultingBalance > MAX_WALLET) revert MaxWalletExceeded(resultingBalance, MAX_WALLET);
         }
