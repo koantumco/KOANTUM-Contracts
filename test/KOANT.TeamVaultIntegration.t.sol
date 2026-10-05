@@ -69,15 +69,14 @@ contract KOANTTeamVaultIntegrationTest is Test {
 
     function test_OrdinaryRecipientStillCannotExceedMaxWallet() public {
         address ordinaryRecipient = makeAddr("ordinaryRecipient");
+        uint256 maxWallet = token.MAX_WALLET();
 
         vm.prank(genesisSafe);
-        token.transfer(ordinaryRecipient, token.MAX_WALLET());
+        token.transfer(ordinaryRecipient, maxWallet);
 
         vm.startPrank(founder1);
 
-        vm.expectRevert(
-            abi.encodeWithSelector(KOANT.MaxWalletExceeded.selector, token.MAX_WALLET() + 1, token.MAX_WALLET())
-        );
+        vm.expectRevert(abi.encodeWithSelector(KOANT.MaxWalletExceeded.selector, maxWallet + 1, maxWallet));
 
         token.transfer(ordinaryRecipient, 1);
 
